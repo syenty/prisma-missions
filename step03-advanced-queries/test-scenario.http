@@ -93,3 +93,9 @@ x-user-id: 2
 # 'Me'(id: 1)의 타임라인 조회
 GET http://localhost:3000/timeline
 x-user-id: 1
+
+###
+# 타임라인 페이지네이션 테스트 (2페이지, 1개씩)
+# User2의 첫 번째 글이 나와야 함 (두 번째로 최신 글)
+GET http://localhost:3000/timeline?page=2&limit=1
+x-user-id: 1

@@ -105,36 +105,48 @@ app.post("/posts", async (req, res) => {
 /**
  * 4. 타임라인 (팔로우 중인 사용자 게시물) 조회 API
  * @route GET /timeline
+ * @query { "page": number, "limit": number }
  * @header { "x-user-id": "..." }
  */
 app.get("/timeline", async (req, res) => {
   const currentUserId = parseInt(req.headers["x-user-id"] as string, 10);
 
-  if (!currentUserId) {
-    return res.status(400).json({ error: "x-user-id 헤더가 필요합니다." });
+  if (isNaN(currentUserId)) {
+    return res.status(400).json({ error: "유효하지 않은 사용자 ID입니다." });
   }
 
-  const timelinePosts = await prisma.post.findMany({
-    where: {
-      author: {
-        followers: {
-          some: {
-            followerId: currentUserId,
+  // 페이지네이션을 위한 쿼리 파라미터 처리
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+  const skip = (page - 1) * limit;
+
+  try {
+    const timelinePosts = await prisma.post.findMany({
+      where: {
+        author: {
+          followers: {
+            some: {
+              followerId: currentUserId,
+            },
           },
         },
       },
-    },
-    include: {
-      author: {
-        select: { name: true },
+      include: {
+        author: {
+          select: { name: true },
+        },
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: limit, // 가져올 게시물 수
+      skip: skip, // 건너뛸 게시물 수
+    });
 
-  res.json(timelinePosts);
+    res.json(timelinePosts);
+  } catch (error) {
+    res.status(500).json({ error: "타임라인 조회에 실패했습니다." });
+  }
 });
 
 const PORT = 3000;

@@ -77,7 +77,7 @@ Prisma 학습을 위한 단계별 미션 프로젝트입니다.
 ## 📂 프로젝트 구조
 
 ```
-prisma-journey/
+prisma-missions/
  ├── step01-crud-basics/
  ├── step02-relations-blog/
  ├── step03-advanced-queries/
@@ -89,8 +89,8 @@ prisma-journey/
 
 ## 📝 진행 로그
 
-- [ ] Step 1 완료
-- [ ] Step 2 완료
-- [ ] Step 3 완료
-- [ ] Step 4 완료
-- [ ] Step 5 완료
+- [x] Step 1 완료
+- [x] Step 2 완료
+- [x] Step 3 완료
+- [x] Step 4 완료
+- [x] Step 5 완료
